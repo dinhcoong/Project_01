@@ -1,0 +1,33 @@
+﻿@model PagedList.IPagedList<mvcweb.Models.Product>
+@using PagedList.Mvc;
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h4>   @ViewBag.Catename</h4>
+<hr />
+<div class="row">
+    @foreach (var item in Model)
+    {
+        <div class="col-md-3">
+            <a href='@Url.Action("Details", "Products", new { Id = item.ProductId })'>
+                <img src="@Url.Content(item.ImageLink)" style="margin:10px" height="160" width="140" />
+            </a>
+            <div class="list-group-item-heading">
+                @Html.ActionLink(item.ProName.ToString(), "Details", "Products", new { id = item.ProductId }, null)
+            </div>
+            <div class="list-group-item-info">
+                @Html.DisplayFor(modelItem => item.Price)
+            </div>
+        </div>
+    }
+</div>
+<hr />
+    Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+
+    @Html.PagedListPager(Model, page => Url.Action("Index",
+        new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))
+    <p>
+        @Html.ActionLink("Back to List", "Index")
+    </p>

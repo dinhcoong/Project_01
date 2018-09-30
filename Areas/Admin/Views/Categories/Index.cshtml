@@ -1,0 +1,44 @@
+﻿@model IEnumerable<mvcweb.Models.Category>
+
+@{
+    ViewBag.Title = "Danh mục sản phẩm";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminPage.cshtml";
+}
+
+<h2>Danh mục sản phẩm</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create",null,new { @class= "btn btn - info"})
+</p>
+<table class="table">
+    <tr>
+
+        <th>
+            @Html.DisplayNameFor(model => model.CateName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CateDesciption)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+    <tr>
+
+        <td>
+            <a href="@Url.Action("GetbyCate","Categories",new { cateid = item.CategoryId })"> @Html.DisplayFor(modelItem => item.CateName) </a>
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CateDesciption)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id = item.CategoryId }) |
+            @*@Html.ActionLink("Details", "Details", new { id = item.CategoryId }) |*@
+            @Html.ActionLink("Delete", "Delete", new { id = item.CategoryId })
+        </td>
+        
+    </tr>
+    }
+
+</table>

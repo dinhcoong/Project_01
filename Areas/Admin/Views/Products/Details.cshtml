@@ -1,0 +1,146 @@
+﻿@model mvcweb.Models.Product
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminPage.cshtml";
+}
+
+<h1>  @Html.DisplayFor(model => model.ProName)</h1>
+<div class="container">
+    <div class="row">
+        <div class="col-xs-4 item-photo">
+            @*@Html.ActionLink(model => model.ProName)*@
+            <a href='@Url.Action("Details", "Products",new { Id=Model.ProductId})'>
+                <img src="@Url.Content(Model.ImageLink)" style="margin:10px" height="330" width="330" />
+            </a>
+        </div>
+        <div class="col-xs-5" style="border:0px solid gray">
+            <!-- Datos del vendedor y titulo del producto -->
+            <h3>  @Html.DisplayFor(model => model.ProName)</h3>
+            <input type="hidden" id="Proid" value="@Model.ProductId" />
+            <!-- Precios -->
+            <h6 class="title-price"><small>Price</small></h6>
+            <h3 style="margin-top:0px;">@Html.DisplayFor(model => model.Price)</h3>
+            <!-- Detalles especificos del producto -->
+            <div class="section">
+                <h6 class="title-attr" style="margin-top:15px;"><small>Mã</small></h6>
+                <div>
+                    @Html.DisplayFor(model => model.ProCode)
+                </div>
+            </div>
+            <div class="section" style="padding-bottom:20px;">
+                <h6 class="title-attr"><small>mô tả</small></h6>
+                <div>
+                    @Html.DisplayFor(model => model.ProDesc)
+                </div>
+            </div>
+            <!-- Botones de compra -->
+            <div class="section" style="padding-bottom:20px;">
+                <a id="myBtn" class="btn btn-success btn-sm" href="#">
+                    <span class="glyphicon glyphicon-shopping-cart"></span>  Thêm vào giỏ
+                </a>
+                @*<a id="myBtn" class="btn btn-success btn-sm" href="@Url.Action("AddToCart", "CartItem", new { id = Url.RequestContext.RouteData.Values["id"] },null)">
+                        <span class="glyphicon glyphicon-shopping-cart"></span>  Thêm vào giỏ
+                    </a>*@
+            </div>
+        </div>
+        <div class="col-xs-9">
+            <ul class="menu-items">
+                <li class="active">Chi tiết sản phẩm</li>
+                <li>Bình luận</li>
+                <li>Bình luận</li>
+                <li>Bình luận</li>
+            </ul>
+            <div style="width:100%;border-top:1px solid silver">
+                @Html.Raw(Model.ProDetail)
+            </div>
+        </div>
+    </div>
+</div>
+
+<p>
+    @Html.ActionLink("Back to List", "Index")
+</p>
+<div id="myModal" class="modal">
+    <!-- Modal content -->
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <p>Bạn đã thêm sản phẩm vào giở hàng thành công!</p>
+    </div>
+</div>
+
+
+@section scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            //-- Click on detail
+            $("ul.menu-items > li").on("click", function () {
+                $("ul.menu-items > li").removeClass("active");
+                $(this).addClass("active");
+            })
+
+            $(".attr,.attr2").on("click", function () {
+                var clase = $(this).attr("class");
+
+                $("." + clase).removeClass("active");
+                $(this).addClass("active");
+            })
+
+            //-- Click on QUANTITY
+            $(".btn-minus").on("click", function () {
+                var now = $(".section > div > input").val();
+                if ($.isNumeric(now)) {
+                    if (parseInt(now) - 1 > 0) { now--; }
+                    $(".section > div > input").val(now);
+                } else {
+                    $(".section > div > input").val("1");
+                }
+            })
+            $(".btn-plus").on("click", function () {
+                var now = $(".section > div > input").val();
+                if ($.isNumeric(now)) {
+                    $(".section > div > input").val(parseInt(now) + 1);
+                } else {
+                    $(".section > div > input").val("1");
+                }
+            })
+        })
+        //add vao gio hang
+        $(document).ready(function () {
+            $("#myBtn").click(function () {
+                var id = { "id": $("#Proid").val() };
+                $.ajax({
+                    url: "/CartItem/AddToCart",
+                    type: "POST",
+                    dataType: "json",
+                    contentType: "application/json",
+                    data: JSON.stringify(id),
+                    success: function (result) {
+                        if (result == "Fail") {
+                            alert("Error");
+                        } else {
+                            //display POpup
+                             var modal = document.getElementById('myModal');
+                            var btn = document.getElementById("myBtn");
+                            var span = document.getElementsByClassName("close")[0];
+                            modal.style.display = "block";
+                            span.onclick = function () {
+                                modal.style.display = "none";
+                            }
+                            // When the user clicks anywhere outside of the modal, close it
+                            window.onclick = function (event) {
+                                if (event.target == modal) {
+                                    modal.style.display = "none";
+                                }
+                            }
+                        }
+                    },
+                    error: function () {
+                        alert("Error");
+                    }
+                });
+            });
+        });
+
+
+    </script>}

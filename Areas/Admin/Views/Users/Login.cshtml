@@ -1,0 +1,55 @@
+﻿@model mvcweb.Models.Users
+@{
+    ViewBag.Title = "Login";
+    Layout = "~/Areas/Admin/Views/Shared/_Login.cshtml";
+}
+<h2>Đăng Nhập</h2>
+@*@using (Html.BeginForm("Login", "Users"))
+{*@
+    <div id="message"></div>
+    <div class="form-group">
+        <label for="usr"> @Html.DisplayNameFor(model => model.UserName):</label>
+        <input type="text" class="form-control" id="usr">
+    </div>
+    <div class="form-group">
+        <label for="pwd"> @Html.DisplayNameFor(model => model.PassWord):</label>
+        <input type="password" class="form-control" id="pwd">
+    </div>
+    <div class="checkbox">
+        <label><input type="checkbox"> Remember me</label>
+    </div>
+    <button type="submit" class="btn btn-default" id="btnLogin">Submit</button>
+@*}*@
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $("#btnLogin").click(function () {
+                //   $("#message").html("Logging in...");
+                var user = {
+                    "UserName": $("#usr").val(),
+                    "PassWord": $("#pwd").val()
+                    //,   "RememberMe": $("#rememberme").prop("checked")
+                };
+                $.ajax({
+                    url: "/Users/Login",
+                    type: "POST",
+                    dataType: "json",
+                    contentType: "application/json",
+                    data: JSON.stringify(user),
+                    success: function (result) {
+                        if (result == "Fail") {
+                            $("#usr").val("");
+                            $("#pwd").val("");
+                            $("#message").html("Tên đăng nhập hoặc mật khấu không đúng");
+                        } else{
+                            window.location.href="../Home";
+                        } },
+                    error: function () {
+                        $("#message").html("Đăng nhập lỗi");
+                    }
+                });
+            });
+        });
+    </script>
+}

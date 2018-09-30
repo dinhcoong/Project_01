@@ -1,0 +1,65 @@
+﻿@model IEnumerable<mvcweb.Models.OrderDetail>
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminPage.cshtml";
+}
+
+<h2>Order</h2>
+
+<div>
+    <h4>Order Detail</h4>
+    Mã đơn hàng  @ViewBag.OrderId
+    Tên khách hàng   @ViewBag.CusName
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.orderdetail_id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.proName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.proPrice)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.proQuantity)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TotalPayment)
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.ActionLink(item.orderdetail_id.ToString(), "Details", "OrderDetails", new { id = item.OrderId }, null)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.proName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.proPrice)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.proQuantity)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TotalPayment)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.orderdetail_id }) |
+                    @*@Html.ActionLink("Details", "Details", "OrderDetails", new { id = item.orderdetail_id }, null) |*@
+                    @Html.ActionLink("Delete", "Delete", new { id = item.orderdetail_id })
+                </td>
+            </tr>
+        }
+
+    </table>
+</div>
+<p>
+    @*@Html.ActionLink("Edit", "Edit", new { id =  }) |*@
+    @Html.ActionLink("Back to List", "Index","Orders")
+</p>

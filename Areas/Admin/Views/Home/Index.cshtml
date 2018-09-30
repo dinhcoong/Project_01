@@ -1,0 +1,15 @@
+﻿@model IEnumerable<mvcweb.Models.Users>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminPage.cshtml";
+}
+
+@{ if (Session["UserId"] == null)
+    {
+        Response.Redirect("~/Admin/Users/LoginView");
+    }
+}
+<h2>Admin Page</h2>
+
+

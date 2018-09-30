@@ -1,0 +1,134 @@
+﻿@model mvcweb.Models.Product
+
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminPage.cshtml";
+}
+<script src="~/AppFiles/Theme/ckeditor/ckeditor.js"></script>
+
+@using (Html.BeginForm("Edit", "Products", FormMethod.Post, new { enctype = "multipart/form-data", onSubmit = "", data_restUrl = Url.Action("Edit", "Products", new { id = "fmEdit" }) }))//data-resetUrl
+{
+    @Html.AntiForgeryToken()
+
+<div class="form-horizontal">
+    <h4>Edit Product</h4>
+    <div class="alert-mess">
+        @ViewBag.status
+    </div><div>
+        @Html.ActionLink("Back to List", "Index")
+    </div>
+    <hr />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @Html.HiddenFor(model => model.ProductId)
+    @Html.HiddenFor(model => model.ImageLink)
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.CategoryId, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.DropDownList("CategoryId", null, htmlAttributes: new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.CategoryId, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.ProName, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.ProName, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.ProName, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.ProCode, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.ProCode, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.ProCode, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.ProDesc, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.ProDesc, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.ProDesc, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.Price, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.Price,  new { htmlAttributes = new { @class = "form -control"} })
+            @Html.ValidationMessageFor(model => model.Price,"", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.ImageLink, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            <img src="@Url.Content(Model.ImageLink)" style="margin:10px" height="50" width="50" id="imagePreview" />
+            <a href="#" onclick="show()" id="show">Thay đổi</a>
+            <a href="#" onclick="hide()" id="hide" style="display:none">Hủy bỏ</a>
+        </div>
+    </div>
+    <div class="form-group" style="display:none" id="uploadhinh">
+        @Html.LabelFor(model => model.ImageLink, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            <input type="file" name="ImageUpload" accept="image/jpeg, image/png" onchange="ShowImagePreview(this,document.getElementById('imagePreview'))" />
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.ProDetail, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div ass="col-md-10">
+            @Html.TextAreaFor(model => model.ProDetail, new { @id = "ProDetail", @class = "form-control", @rows = "10" }) @Html.ValidationMessageFor(model => model.ProDetail, "", new { @class = "text-danger" })
+            <script>
+                CKEDITOR.replace("ProDetail");
+                CKFinder.setupCKEditor(null,"@Url.Content("~/ckfinder/")");
+            </script>
+        </div>
+    </div>
+    @*<div class="form-group">
+        @Html.LabelFor(model => model.Status, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            <div class="checkbox">
+                @Html.EditorFor(model => model.Status)
+                @Html.ValidationMessageFor(model => model.Status, "", new { @class = "text-danger" })
+            </div>
+        </div>
+    </div>*@
+    <div class="form-group">
+        @Html.LabelFor(model => model.Status, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            <div class="checkbox">
+                @Html.CheckBoxFor(model => model.Status)
+                @Html.ValidationMessageFor(model => model.Status, "", new { @class = "text-danger" })
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Save" class="btn btn-default" />
+        </div>
+    </div>
+</div>
+}
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+@section Scripts {
+    <script lang="ja">
+        function show() {
+            document.getElementById("uploadhinh").style.display = 'block';
+            document.getElementById("show").style.display = 'none';
+            document.getElementById("hide").style.display = 'block';
+        } function hide() {
+            document.getElementById("uploadhinh").style.display = 'none';
+            document.getElementById("show").style.display = 'block';
+            document.getElementById("hide").style.display = 'none';
+        }
+        $('#fmEdit').on('submit', function () {
+            for (instance in CKEDITOR.instances) {
+                CKEDITOR.instances[instance].updateElement();
+            }
+
+        });
+    </script>
+    @Scripts.Render("~/bundles/jqueryval")
+}

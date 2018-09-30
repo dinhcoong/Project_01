@@ -1,0 +1,131 @@
+﻿@model List<mvcweb.Models.CartItem>
+@{
+    ViewBag.Title = "Giỏ hàng của bạn";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<h3>@ViewBag.Title</h3>
+@if (Model == null || Model.Count == 0)
+{
+    <p class="text-info text-center">
+        Giỏ hàng của bạn rỗng!
+    </p>
+}
+else
+{
+    <div class="container">
+        <div id="update-message">
+        </div>
+        <table id="cart" class="table table-hover table-condensed">
+            <thead>
+                <tr>
+                    <th style="width:50%">Tên sản phẩm</th>
+                    <th style="width:10%">Đơn giá</th>
+                    <th style="width:8%">Số lượng</th>
+                    <th style="width:22%" class="text-center">Thành tiền</th>
+                    <th style="width:10%"></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+
+                        <tr id="row-@item.ProductId">
+                            <td data-th="Product">
+                                <div class="row">
+                                    <div class="col-sm-3 hidden-xs">
+                                        <img src="@Url.Content(item.Images)" class="img-responsive" alt="@item.ProName" />
+                                    </div>
+                                    <div class="col-sm-8">
+                                        <h4 class="nomargin"><a target="_blank" href="@Url.Action("Details", "Products", new { id = item.ProductId })"> @item.ProName </a></h4>
+                                        <p>@item.ProName </p>
+                                    </div>
+                                </div>
+
+                            </td>
+                            <td data-th="Price"> @item.Price.ToString("#,##0").Replace(',', '.') VNĐ</td>
+
+                            <td data-th="Quantity">
+                                @*<input type="hidden" name="id" value="@item.ProductId" />*@
+                                <input type="number" id="number-@item.ProductId" class="form-control text-center" min="1" step="1" name="quantity" value="@item.Quantity" />
+                            </td>
+                            <td data-th="Subtotal" class="text-center" id="itemTotal-@item.ProductId">@item.Total</td>
+                            <td class="actions" data-th="">
+
+                                <a href="#" class="RefreshLink btn btn-info btn-sm" data-id="@item.ProductId"><i class="fa fa-refresh"></i></a>
+                                <a href="#" class="RemoveLink btn btn-danger btn-sm" data-id="@item.ProductId" onclick="return confirm('Bạn có chắc muốn xóa sản phẩm này?');"> <i class="fa fa-trash-o"></i></a>
+
+                            </td>
+                        </tr>
+                }
+            </tbody>
+            <tfoot>
+                <tr class="visible-xs">
+                    <td class="text-center"><strong></strong></td>
+                </tr>
+                <tr>
+                    <td><a href="@Url.Action("Index","Home")" class="btn btn-warning"><i class="fa fa-angle-left"></i> Continue Shopping</a></td>
+                    <td colspan="2" class="hidden-xs"></td>
+
+                    <td class="hidden-xs text-center"><strong>Tổng đơn hàng <span id="cart-total"> @Model.Sum(m => m.Total).ToString("#,##0").Replace(',', '.')</span> VNĐ</strong></td>
+                    <td><a id="Check_out" href="@Url.Action("Create","Orders")" class="btn btn-success btn-block">Checkout <i class="fa fa-angle-right"></i></a></td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+    <script type="text/javascript">
+        $(function () {
+            // Document.ready -> link up remove event handler
+            $(".RemoveLink").click(function () {
+                // Get the id from the link
+                var recordToDelete = $(this).attr("data-id");
+                if (recordToDelete != '') {
+                    // Perform the ajax post
+                    $.post("/CartItem/DeleteItem", { "ProId": recordToDelete },
+                        function (data) {
+                            // Successful requests get here
+                            // Update the page elements
+
+                            $('#row-' + data.ProductId).fadeOut('slow');
+                            // } else {
+                            //    $('#item-count-' + data.ProductId).text(data.ItemCount);
+                            // }
+                            if (data.Totalpayment == 0) { $('#Check_out').fadeOut('slow'); }
+                            $('#cart-total').text(data.Totalpayment);
+                            $('#update-message').text(data.Info);
+                            //$('#cart-status').text('Cart (' + data.CartCount + ')');
+                        });
+                }
+            });
+
+            // Document.ready -> link up remove event handler
+            $(".RefreshLink").click(function () {
+                // Get the id from the link
+                var recordToUpdate = $(this).attr("data-id");
+                if (recordToUpdate != '') {
+                    var recordQuantity = $('#number-' + recordToUpdate).val();
+                    // Perform the ajax post
+                    $.post("/CartItem/UpdateQuantity", {
+                        "id": recordToUpdate, "quantity": recordQuantity
+                    },
+                        function (data) {
+                            // Successful requests get here
+
+                            // Update the page elements
+                            if (data.Totalpayment == 0) { $('#Check_out').fadeOut('slow'); }
+                            $('#cart-total').text(data.Totalpayment);
+                            $('#update-message').text(data.Info);
+                            $('#itemTotal-' + data.ProductId).text(data.Total);
+                            $('#number-' + recordToUpdate).text(data.quantity);
+                        });
+                }
+            });
+
+
+        });
+
+
+    </script>
+
+
+
+}

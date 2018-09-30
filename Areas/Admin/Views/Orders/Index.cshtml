@@ -1,0 +1,52 @@
+﻿@model IEnumerable<mvcweb.Models.Order>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminPage.cshtml";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.OrderId)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Customer.CusName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.OrderDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.OrderOption)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.ActionLink(item.OrderId.ToString(), "Details", "OrderDetails", new { id = item.OrderId },null)     
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Customer.CusName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.OrderDate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.OrderOption)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id = item.OrderId }) |
+            @Html.ActionLink("Details", "Details", "OrderDetails", new { id = item.OrderId },null) |
+            @Html.ActionLink("Delete", "Delete", new { id = item.OrderId })
+        </td>
+    </tr>
+}
+
+</table>

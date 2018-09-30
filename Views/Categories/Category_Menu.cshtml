@@ -1,0 +1,137 @@
+﻿@model IEnumerable<mvcweb.Models.Category>
+<!-- Main Navigation -->
+<nav class="main_nav">
+    <div class="container">
+        <div class="row">
+            <div class="col">
+
+                <div class="main_nav_content d-flex flex-row">
+
+                    <!-- Categories Menu -->
+
+                    <div class="cat_menu_container">
+                        <div class="cat_menu_title d-flex flex-row align-items-center justify-content-start">
+                            <div class="cat_burger"><span></span><span></span><span></span></div>
+                            <div class="cat_menu_text">categories</div>
+                        </div>
+
+                        <ul class="cat_menu">
+                            @foreach (var item in Model)
+                            {
+                                <li>
+                                    <a href="@Url.Action("GetbyCate","Categories",new { cateid = item.CategoryId })"> @Html.DisplayFor(modelItem => item.CateName)<i class="fas fa-chevron-right ml-auto"></i> </a>
+                                </li>
+                            }
+                            @*<li><a href="#">Computers & Laptops <i class="fas fa-chevron-right ml-auto"></i></a></li>
+                <li><a href="#">Cameras & Photos<i class="fas fa-chevron-right"></i></a></li>
+                <li class="hassubs">
+                    <a href="#">Hardware<i class="fas fa-chevron-right"></i></a>
+                    <ul>
+                        <li class="hassubs">
+                            <a href="#">Menu Item<i class="fas fa-chevron-right"></i></a>
+                            <ul>
+                                <li><a href="#">Menu Item<i class="fas fa-chevron-right"></i></a></li>
+                                <li><a href="#">Menu Item<i class="fas fa-chevron-right"></i></a></li>
+                                <li><a href="#">Menu Item<i class="fas fa-chevron-right"></i></a></li>
+                                <li><a href="#">Menu Item<i class="fas fa-chevron-right"></i></a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#">Menu Item<i class="fas fa-chevron-right"></i></a></li>
+                        <li><a href="#">Menu Item<i class="fas fa-chevron-right"></i></a></li>
+                        <li><a href="#">Menu Item<i class="fas fa-chevron-right"></i></a></li>
+                    </ul>
+                </li>
+                <li><a href="#">Smartphones & Tablets<i class="fas fa-chevron-right"></i></a></li>
+                <li><a href="#">TV & Audio<i class="fas fa-chevron-right"></i></a></li>
+                <li><a href="#">Gadgets<i class="fas fa-chevron-right"></i></a></li>
+                <li><a href="#">Car Electronics<i class="fas fa-chevron-right"></i></a></li>
+                <li><a href="#">Video Games & Consoles<i class="fas fa-chevron-right"></i></a></li>
+                <li><a href="#">Accessories<i class="fas fa-chevron-right"></i></a></li>*@
+                        </ul>
+                    </div>
+
+                    <!-- Main Nav Menu -->
+
+                    <div class="main_nav_menu ml-auto">
+                        <ul class="standard_dropdown main_nav_dropdown">
+                            <li><a href="#">Home</a><i class="fas fa-chevron-down"></i></li>
+                            <li>@Html.ActionLink("Category", "Index", "Categories")<i class="fas fa-chevron-down"></i></li>
+
+                            <li>@Html.ActionLink("Product", "Index", "Products")<i class="fas fa-chevron-down"></i></li>
+                            <li> @Html.ActionLink("Cart", "Index", "CartItem")<i class="fas fa-chevron-down"></i></li>
+                            <li>
+                                @{ if (Session["CusId"] != null)
+                                    { @Html.ActionLink(Session["CusName"].ToString(), "Details", "Users", new { id = Session["CusId"].ToString() }, null)
+                                    @Html.Raw(HttpUtility.HtmlDecode("<i class='fas fa-chevron-down'></i></li><li>"))
+                                    @Html.ActionLink("Logout", "Logout", "Customers")
+                                }
+                                else
+                                {
+                                    @Html.ActionLink("Login", "LoginView", "Customers", new { url = Request.Url.AbsoluteUri }, null)
+                                    @Html.Raw(HttpUtility.HtmlDecode("<i class='fas fa-chevron-down'></i></li><li>"))
+                                    @Html.ActionLink("Register", "Create", "Customers", new { url = Request.Url.AbsoluteUri }, null)
+                                    // Response.Redirect("~/Users/LoginView");
+                                } }
+                                <i class='fas fa-chevron-down'></i>
+                            </li>
+                            <li><a href="blog.html">Blog<i class="fas fa-chevron-down"></i></a></li>
+                            @*<li class="hassubs">
+                                <a href="#">Super Deals<i class="fas fa-chevron-down"></i></a>
+                                <ul>
+                                    <li>
+                                        <a href="#">Menu Item<i class="fas fa-chevron-down"></i></a>
+                                        <ul>
+                                            <li><a href="#">Menu Item<i class="fas fa-chevron-down"></i></a></li>
+                                            <li><a href="#">Menu Item<i class="fas fa-chevron-down"></i></a></li>
+                                            <li><a href="#">Menu Item<i class="fas fa-chevron-down"></i></a></li>
+                                        </ul>
+                                    </li>
+                                    <li><a href="#">Menu Item<i class="fas fa-chevron-down"></i></a></li>
+                                    <li><a href="#">Menu Item<i class="fas fa-chevron-down"></i></a></li>
+                                    <li><a href="#">Menu Item<i class="fas fa-chevron-down"></i></a></li>
+                                </ul>
+                            </li>*@
+                         
+
+                        </ul>
+                    </div>
+
+                    <div class="navbar-collapse collapse">
+                        <ul class="nav navbar-nav">
+                            <li>@Html.ActionLink("Category", "Index", "Categories")</li>
+                            <li>@Html.ActionLink("Product", "Index", "Products")</li>
+                            <li> @Html.ActionLink("Cart", "Index", "CartItem")</li>
+                            <li>
+                                @{ if (Session["CusId"] != null)
+                                    { @Html.ActionLink(Session["CusName"].ToString(), "Details", "Users", new { id = Session["CusId"].ToString() }, null)
+                                    @Html.Raw(HttpUtility.HtmlDecode("</li><li>"))
+                                    @Html.ActionLink("Logout", "Logout", "Customers")
+                                }
+                                else
+                                {
+                                    @Html.ActionLink("Login", "LoginView", "Customers", new { url = Request.Url.AbsoluteUri }, null)
+                                    @Html.Raw(HttpUtility.HtmlDecode("</li><li>"))
+                                    @Html.ActionLink("Register", "Create", "Customers", new { url = Request.Url.AbsoluteUri }, null)
+                                    // Response.Redirect("~/Users/LoginView");
+                                } }
+
+                            </li>
+
+                        </ul>
+                    </div>
+                    <!-- Menu Trigger -->
+
+                    <div class="menu_trigger_container ml-auto">
+                        <div class="menu_trigger d-flex flex-row align-items-center justify-content-end">
+                            <div class="menu_burger">
+                                <div class="menu_trigger_text">menu</div>
+                                <div class="cat_burger menu_burger_inner"><span></span><span></span><span></span></div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>

@@ -1,0 +1,91 @@
+﻿@model PagedList.IPagedList < mvcweb.Models.Product>
+@*@model IEnumerable<mvcweb.Models.Product>*@
+@using PagedList.Mvc;
+
+@{
+   
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminPage.cshtml";
+}
+
+<h2>Danh sách sản phẩm</h2>
+@using (Html.BeginForm())
+{
+    <p>
+        Find by name: @Html.TextBox("SearchString")
+        <input type="submit" value="Search" />
+    </p>
+}
+    <p>
+        @Html.ActionLink("Create New", "Create", null, new { @class = "btn btn - info" })
+    </p>
+<table class="table">
+    <tr>
+        <th>
+            Category
+        </th>
+        <th>
+            Product Name
+        </th>
+        <th>
+            Product Code
+        </th>
+        <th>
+            Product Description
+        </th>
+        <th>
+            Price
+        </th>
+        <th>
+            Image
+        </th>
+        <th>
+            Status
+        </th>
+
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Category.CateName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProCode)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProDesc).ToString()
+            </td>
+
+            <td>
+                @Html.DisplayFor(modelItem => item.Price)
+            </td>
+            <td>
+
+                <img src="@Url.Content(item.ImageLink)" style="margin:10px" height="50" width="50" id="imagePreview" />
+
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Status)
+            </td>
+
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.ProductId }) |
+                @Html.ActionLink("Details", "Details", new { id = item.ProductId }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.ProductId })
+            </td>
+        </tr>
+    }
+
+</table>
+
+<br />
+Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+
+@Html.PagedListPager(Model, page => Url.Action("Index",
+    new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))

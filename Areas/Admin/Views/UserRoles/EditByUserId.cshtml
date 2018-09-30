@@ -1,0 +1,78 @@
+﻿@model mvcweb.Models.ViewModel
+@{
+    ViewBag.Title = "Phân quyền cho nhân viên";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminPage.cshtml";
+}
+<h2>Phân quyền cho nhân viên</h2>
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+
+        @foreach (var u in Model.Users)
+        {
+            <h4>
+                @Html.LabelFor(model => u.UserName, htmlAttributes: new { @class = "" })
+                @u.UserName
+            </h4>
+            <input type="text" name="userId" value="@u.UserId" hidden="hidden" id="usID" />
+        }
+        <hr />
+        <div id="message"></div>
+        <fieldset id="fsCheckRole">
+            @foreach (var item in Model.Roles)
+            {
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox"
+                               name="rolecheck"
+                               value="@item.RoleId" checked="@item.IsSelected" /> @item.RoleName
+                        </label>
+                    </div>
+                }
+        </fieldset>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Save" id="btnSave" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index", "Users")
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        $(document).ready(function () {
+            $("#btnSave").click(function () {
+                var roles="";
+                var UserId = $("#usID").val();
+                $.each($("input[name='rolecheck']:checked"), function () {
+                    if (typeof $(this).val() !== "undefined")
+                        roles += ($(this).val() + ',');
+                });
+
+                $.ajax({
+                    url: "/UserRoles/UpdateRole",
+                    type: "POST",
+                    dataType: "json",
+                    contentType: "application/json",
+                    data: JSON.stringify({ 'ListRoleid': roles, 'UserId': UserId }),
+                    success: function (result) {
+                        if (result == "Success") {
+                            $("#message").html("Cập nhật thành công");
+                        } else {
+                            $("#message").html("Cập nhật ko thành công");
+                        }
+                    },
+                    error: function () {
+                        $("#message").html("Cập nhập lỗi");
+                    }
+                });
+            });
+        });
+    </script>
+}
